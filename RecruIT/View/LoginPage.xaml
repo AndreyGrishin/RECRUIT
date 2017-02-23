@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="RecruIT.View.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="using:RecruIT.ViewModel"
+    xmlns:interactivity="using:DevExpress.Mvvm.UI.Interactivity"
+    mc:Ignorable="d"    
+    FontFamily="Segoe UI Light"
+    DataContext="{Binding  Source={StaticResource ResourceKey=Locator}, Path=Login }"
+    >
+    <Page.Resources>
+        <viewModel:BooleanToVisibilityConverter  x:Key="BooleanToVisibility" />
+    </Page.Resources>
+    
+    <controls:Grid xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="309*"/>
+            <ColumnDefinition Width="331*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="1" BorderBrush="#FF303030" BorderThickness="1" Background="#FF222222" Margin="0"/>
+        <Border BorderBrush="#FFF39F3A" BorderThickness="0" Background="#FF00AFF0">
+            <Grid Margin="0">
+                <controls:Grid Margin="0" Width="477" Height="155">
+                    <controls:TextBlock TextWrapping="Wrap" Foreground="White" Margin="0,0,16,0" FontSize="48" FontFamily="Arial" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <controls:Run FontSize="48" Text="Добро пожаловать в "/>
+                        <controls:Run FontSize="86" Text="RECRU"/>
+                        <controls:Run Foreground="#FF393939" FontSize="86" Text="IT"/>
+                    </controls:TextBlock>
+                    <controls:Image HorizontalAlignment="Left" Height="85" VerticalAlignment="Top" Width="82" Margin="391,55,0,0" Source="ms-appx:///Assets/Ico.png"/>
+                </controls:Grid>
+            </Grid>
+        </Border>
+        <controls:StackPanel controls:Grid.Column="1" Margin="0"  Orientation="Vertical">
+            <controls:StackPanel x:Name="LoginPanel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" controls:Canvas.ZIndex="1" Height="370" Width="770" Margin="0,100,0,0">
+                <controls:TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Авторизация пользователя" VerticalAlignment="Top" FontSize="36" Foreground="#FFA0A0A0"/>
+                <controls:StackPanel Margin="40,40,40,0" Height="78">
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding CurrentUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0" Height="32" HorizontalContentAlignment="Left" PlaceholderText="Введите логин"/>
+                </controls:StackPanel>
+                <controls:StackPanel Margin="40,15,40,0" Height="72">
+                    <controls:PasswordBox Margin="0,5,0,0" Password="{controls:Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" Height="32" PlaceholderText="Введите пароль"/>
+                </controls:StackPanel>
+                <controls:StackPanel Margin="40,25,216,0" Orientation="Horizontal">
+                    <controls:Button Content="ВОЙТИ" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#00aff0" Foreground="#FF222222" Width="225" Height="45" FontSize="16" FontFamily="Segoe UI Light" Command="{controls:Binding LogIn}"/>
+                    <controls:HyperlinkButton Content="СОЗДАТЬ АККАУНТ" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25,0,0,0" Command="{Binding ShowRegistration}" Foreground="#FF888888"  FontSize="24"/>
+                </controls:StackPanel>
+            </controls:StackPanel>
+            <controls:StackPanel x:Name="RegistrationPanel" Visibility="{Binding RegisterVisibility, Converter={StaticResource BooleanToVisibility}}" HorizontalAlignment="Center" Height="459" VerticalAlignment="Bottom" Width="735" Margin="18,50,17,0">
+                <controls:TextBlock TextWrapping="Wrap" Text="РЕГИСТРАЦИЯ" Foreground="#FF7F7F7F" FontSize="36" HorizontalAlignment="Center"/>
+                <controls:StackPanel Orientation="Vertical">
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Имя:">
+                 
+                    </controls:TextBox>
+                </controls:StackPanel>
+                <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Логин:"/>
+                </controls:StackPanel>
+                <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
+                    <controls:PasswordBox  Password="{controls:Binding NewUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Пароль:"/>
+                </controls:StackPanel>
+                <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
+                    <controls:PasswordBox Password="{controls:Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Повторите пароль:"/>
+                </controls:StackPanel>
+                <controls:Button Content="ПОДТВЕРДИТЬ" HorizontalAlignment="Left" Command="{controls:Binding AddUser}" VerticalAlignment="Stretch" Background="#00aff0" Foreground="#FF222222" Width="225" Height="45" FontSize="16" Margin="0,25,0,0" FontFamily="Segoe UI Light"/>
+            </controls:StackPanel>
+        </controls:StackPanel>
+    </controls:Grid>
+</Page>

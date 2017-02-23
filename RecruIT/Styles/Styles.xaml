@@ -1,0 +1,48 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RecruIT.Styles"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
+
+    <DataTemplate x:Key="EmployeesTemplate">
+        <Grid Background="White"
+                  BorderBrush="#FF2079D3"
+                  BorderThickness="1" Height="208">
+            <StackPanel Margin="5,10,5,5" Orientation="Vertical">
+                <Ellipse Width="100" Height="100" VerticalAlignment="Top" Margin="20,0,27,0" Stroke="#FF449EDC" StrokeThickness="3">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="ms-appx:///Resources/Images/hr.jpeg" Stretch="UniformToFill"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <TextBlock Text="Имя:" />
+                    <TextBlock Text="{Binding FirstName}" Margin="10,0,0,0" Foreground="#FF858585" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <TextBlock Text="Фамилия:" />
+                    <TextBlock Text="{Binding LastName}" Margin="10,0,0,0" Foreground="#FF858585" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <TextBlock Text="Должность:" />
+                    <TextBlock Text="{Binding Post}" Margin="10,0,0,0" Foreground="#FF858585" />
+                </StackPanel>
+            </StackPanel>
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="HeaderTemplate">
+        <StackPanel>
+            <TextBlock Text="{Binding}"
+                           TextWrapping="WrapWholeWords" FontSize="18" FontFamily="Arial" />
+        </StackPanel>
+    </DataTemplate>
+
+    <Style x:Key="MaskedTextBoxStyle"
+               TargetType="TextBox">
+        <Setter Property="Margin" Value="10,0,10,0" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+</ResourceDictionary>

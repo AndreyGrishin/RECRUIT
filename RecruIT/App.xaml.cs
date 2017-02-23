@@ -14,6 +14,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.EntityFrameworkCore;
+using RecruIT.Model;
+using RecruIT.Model.Employyes;
+using RecruIT.View;
 
 namespace RecruIT
 {
@@ -30,6 +34,15 @@ namespace RecruIT
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            using (var db = new UsersContext())
+            {
+                db.Database.Migrate();
+            }
+            using (var db = new EmployeesContext())
+            {
+                db.Database.Migrate();
+            }
         }
 
         /// <summary>
@@ -66,7 +79,7 @@ namespace RecruIT
                     // Если стек навигации не восстанавливается для перехода к первой странице,
                     // настройка новой страницы путем передачи необходимой информации в качестве параметра
                     // параметр
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(LoginPage), e.Arguments);
                 }
                 // Обеспечение активности текущего окна
                 Window.Current.Activate();

@@ -1,0 +1,45 @@
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Views;
+using Microsoft.Practices.ServiceLocation;
+using RecruIT.View;
+
+namespace RecruIT.ViewModel
+{
+    public class ViewModelLocator
+    {/// <summary>
+     /// Initializes a new instance of the ViewModelLocator class.
+     /// </summary>
+        public ViewModelLocator()
+        {
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            var nav = new NavigationService();
+            nav.Configure("LoginPage", typeof(LoginPage));
+            nav.Configure("MainPage", typeof(MainPage));
+            if (ViewModelBase.IsInDesignModeStatic)
+            {
+                // Create design time view services and models
+            }
+            else
+            {
+                // Create run time view services and models
+            }
+
+            SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<MainPage>();
+            SimpleIoc.Default.Register<INavigationService>(() => nav);
+        }
+        public LoginViewModel Login
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<LoginViewModel>();
+            }
+        }
+
+        public static void Cleanup()
+        {
+            // TODO Clear the ViewModels
+        }
+    }
+}
