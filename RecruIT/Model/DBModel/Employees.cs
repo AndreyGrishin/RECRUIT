@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RecruIT.Model.EmployeesModel
+namespace RecruIT.Model.DBModel
 {
     public class Employees
     {
@@ -14,10 +14,11 @@ namespace RecruIT.Model.EmployeesModel
         public DateTime BirthDate { get; set; }
         public int ContactsInfoId { get; set; }
         public ContactInfo ContactInfo { get; set; }
+        public DateTime StartDate { get; set; }
 
         public Employees() { }
 
-        public Employees(int id, string firstName, string middleName, string lastName, string post, string gender, DateTime birthDate, ContactInfo contactInfo)
+        public Employees(int id, string firstName, string middleName, string lastName, string post, string gender, DateTime birthDate, ContactInfo contactInfo, DateTime startDate)
         {
             Id = id;
             FirstName = firstName;
@@ -27,6 +28,7 @@ namespace RecruIT.Model.EmployeesModel
             Gender = gender;
             BirthDate = birthDate;
             ContactInfo = contactInfo;
+            StartDate = startDate;
         }
 
         public override string ToString()

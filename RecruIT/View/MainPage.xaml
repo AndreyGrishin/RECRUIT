@@ -5,9 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     x:Class="RecruIT.View.MainPage"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    DataContext="{Binding  Source={StaticResource ResourceKey=Locator}, Path=Main }">
+
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -39,7 +41,7 @@
                             <TextBlock FontSize="24" Text="Поделиться" Margin="10 0 0 0" Foreground="WhiteSmoke" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem x:Name="settings">
+                    <ListBoxItem x:Name="settings" Margin="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontSize="36" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" Foreground="WhiteSmoke" />
                             <TextBlock FontSize="24" Text="Настройки" Margin="10 0 0 0" Foreground="WhiteSmoke" />
@@ -48,90 +50,96 @@
                 </ListBox>
             </SplitView.Pane>
             <Frame x:Name="WorkPanel" >
-                <Pivot Title="Сотрудники" Foreground="#FF444141">
-                    <PivotItem Header="Сотрудники" Margin="0">
-                        <Grid Margin="0">
-                            <controls:AdaptiveGridView x:Name="AdaptiveGridViewControl"
-                                   DesiredWidth="300"
-                                   IsItemClickEnabled="{Binding IsItemClickEnabled.Value, Mode=TwoWay}"
-                                   ItemHeight="160"
-                                   ItemTemplate="{StaticResource EmployeesTemplate}"
-                                   OneRowModeEnabled="{Binding OneRowModeEnabled.Value}"
-                                   SelectionMode="{Binding SelectionMode.Value, Mode=TwoWay}" Margin="0,0,0,53" >
-                                <GridViewItem Content="GridViewItem" Margin="0"/>
-                                <GridViewItem Content="GridViewItem" Margin="0"/>
-                            </controls:AdaptiveGridView>
-                            <CommandBar Margin="0" VerticalContentAlignment="Top" VerticalAlignment="Bottom" BorderThickness="0" Background="WhiteSmoke" BorderBrush="#FF3C7DBD">
-                                <CommandBar.Content>
-                                    <Grid/>
-                                </CommandBar.Content>
-                                <AppBarButton Icon="Add" Label="&#xE80F;"/>
-                                <AppBarButton Icon="Accept" Label="Обновить"/>
-                                <AppBarButton Icon="Cancel" Label="Удалить"/>
-                            </CommandBar>
-                        </Grid>
-                    </PivotItem>
-                    <PivotItem Header="Анкета" Margin="0">
-                        <ScrollViewer>
-                            <StackPanel Orientation="Vertical" Height="899" Margin="30,0,0,0">
-                                <Grid Height="43">
-                                    <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
-                                        <TextBlock FontSize="36" FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" Foreground="#FF464343" />
-                                        <TextBlock Margin="20,7,0,0" TextWrapping="Wrap" Text="Личная информация" Foreground="Black" FontSize="22" FontFamily="Arial" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    </StackPanel>
-                                    <Rectangle Fill="#FF505057" Height="1" Margin="0,42,60,0" VerticalAlignment="Top" Opacity="0.6"/>
-                                </Grid>
-                                <Grid Margin="10,15,60,0" Height="83">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="ФИО" VerticalAlignment="Top" FontSize="20"/>
-                                    <StackPanel Margin="0,37,0,0" Orientation="Horizontal">
-                                        <TextBox x:Name="LName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" PlaceholderText="ФАМИЛИЯ"/>
-                                        <TextBox x:Name="FName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" Margin="20,0,0,0" PlaceholderText="ИМЯ"/>
-                                        <TextBox x:Name="TName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" Margin="20,0,0,0" PlaceholderText="ОТЧЕСТВО"/>
-                                    </StackPanel>
-                                </Grid>
-                                <Grid Margin="10,15,60,0" Height="82">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Дата рождения" VerticalAlignment="Top" FontSize="20"/>
-                                    <DatePicker HorizontalAlignment="Left" Margin="0,44,0,0" VerticalAlignment="Top"/>
-                                </Grid>
-                                <Grid Margin="10,15,60,0" Height="74">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пол" VerticalAlignment="Top" FontSize="20"/>
-                                    <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Margin="0,32,0,0" SelectedIndex="0">
-                                        <ComboBoxItem Content="Мужской" Height="100" Width="100"/>
-                                        <ComboBoxItem Content="Женский" Height="100" Width="100"/>
-                                    </ComboBox>
-                                </Grid>
-                                <Grid Height="44" Margin="0,15,10,0">
-                                    <StackPanel Margin="0,0,0,1" Orientation="Horizontal">
-                                        <TextBlock FontSize="36" FontFamily="Segoe MDL2 Assets" Text="&#xE7EE;" Foreground="#FF464343" />
-                                        <TextBlock Margin="20,7,0,0" TextWrapping="Wrap" Text="Контактная информация" Foreground="Black" FontSize="22" FontFamily="Arial" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    </StackPanel>
-                                    <Rectangle Fill="#FF505057" Height="1" Margin="0,43,50,0" VerticalAlignment="Top" Opacity="0.6"/>
-                                </Grid>
-                                <Grid Margin="10,15,60,0" Height="74">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Страна" VerticalAlignment="Top" FontSize="20"/>
-                                    <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,35,0,0" Width="300"/>
-                                </Grid>
-                                <Grid Margin="10,15,0,0" Height="74">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Адресс" VerticalAlignment="Top" FontSize="20"/>
-                                    <StackPanel Margin="0,35,0,7" Orientation="Horizontal">
-                                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" PlaceholderText="ГОРОД"/>
-                                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Margin="20,0,0,0" PlaceholderText="УЛИЦА"/>
-                                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Margin="20,0,0,0" PlaceholderText="ДОМ"/>
-                                    </StackPanel>
-                                </Grid>
-                                <Grid Margin="10,15,60,0" Height="70">
-                                    <TextBox
-                                        controls:TextBoxMask.Mask="+7999-999-99-99"
-                                        controls:TextBoxMask.PlaceHolder=" "
-                                        HeaderTemplate="{StaticResource HeaderTemplate}"
-                                        Header="Телефон"
-                                        Style="{StaticResource MaskedTextBoxStyle}" Margin="0" Width="300" HorizontalAlignment="Left" />
-                                </Grid>
-                                <Grid Margin="0,15,0,0" Height="84" HorizontalAlignment="Left" Width="321"/>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </PivotItem>
-                </Pivot>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="319*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <CommandBar Margin="0,1" VerticalContentAlignment="Top" VerticalAlignment="Stretch" BorderThickness="0" Background="WhiteSmoke" BorderBrush="#FF3C7DBD" Grid.Row="1">
+                        <CommandBar.Content>
+                            <Grid/>
+                        </CommandBar.Content>
+                        <AppBarButton Icon="Add" Label="Добавить" Command="{Binding AddNewEmployeeCommand}"/>
+                        <AppBarButton Icon="Accept" Label="Обновить"/>
+                        <AppBarButton Icon="Cancel" Label="Удалить"/>
+                    </CommandBar>
+                    <Pivot Title="Сотрудники" Foreground="#FF444141" SelectedIndex="{Binding PivotPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <PivotItem Header="Сотрудники" Margin="0">
+                            <Grid Margin="0">
+                                <controls:AdaptiveGridView x:Name="AdaptiveGridViewControl"
+                                    DesiredWidth="300"
+                                    IsItemClickEnabled="{Binding IsItemClickEnabled.Value, Mode=TwoWay}"
+                                    ItemHeight="160"
+                                    ItemTemplate="{StaticResource EmployeesTemplate}"
+                                    OneRowModeEnabled="{Binding OneRowModeEnabled.Value}"
+                                    SelectionMode="{Binding SelectionMode.Value, Mode=TwoWay}" Margin="0,0,0,53" >
+                                    <GridViewItem Content="GridViewItem" Margin="0"/>
+                                    <GridViewItem Content="GridViewItem" Margin="0"/>
+                                </controls:AdaptiveGridView>
+                            </Grid>
+                        </PivotItem>
+                        <PivotItem Header="Анкета" Margin="0">
+                            <ScrollViewer>
+                                <StackPanel Orientation="Vertical" Height="899" Margin="30,0,0,0">
+                                    <Grid Height="43">
+                                        <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                            <TextBlock FontSize="36" FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" Foreground="#FF464343" />
+                                            <TextBlock Margin="20,7,0,0" TextWrapping="Wrap" Text="Личная информация" Foreground="Black" FontSize="22" FontFamily="Arial" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                        </StackPanel>
+                                        <Rectangle Fill="#FF505057" Height="1" Margin="0,42,60,0" VerticalAlignment="Top" Opacity="0.6"/>
+                                    </Grid>
+                                    <Grid Margin="10,15,60,0" Height="83">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="ФИО" VerticalAlignment="Top" FontSize="20"/>
+                                        <StackPanel Margin="0,37,0,0" Orientation="Horizontal">
+                                            <TextBox x:Name="LName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" PlaceholderText="ФАМИЛИЯ"/>
+                                            <TextBox x:Name="FName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" Margin="20,0,0,0" PlaceholderText="ИМЯ"/>
+                                            <TextBox x:Name="TName_TextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172" Margin="20,0,0,0" PlaceholderText="ОТЧЕСТВО"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="10,15,60,0" Height="82">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Дата рождения" VerticalAlignment="Top" FontSize="20"/>
+                                        <DatePicker HorizontalAlignment="Left" Margin="0,44,0,0" VerticalAlignment="Top"/>
+                                    </Grid>
+                                    <Grid Margin="10,15,60,0" Height="74">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пол" VerticalAlignment="Top" FontSize="20"/>
+                                        <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Margin="0,32,0,0" SelectedIndex="0">
+                                            <ComboBoxItem Content="Мужской" Height="100" Width="100"/>
+                                            <ComboBoxItem Content="Женский" Height="100" Width="100"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    <Grid Height="44" Margin="0,15,10,0">
+                                        <StackPanel Margin="0,0,0,1" Orientation="Horizontal">
+                                            <TextBlock FontSize="36" FontFamily="Segoe MDL2 Assets" Text="&#xE7EE;" Foreground="#FF464343" />
+                                            <TextBlock Margin="20,7,0,0" TextWrapping="Wrap" Text="Контактная информация" Foreground="Black" FontSize="22" FontFamily="Arial" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                        </StackPanel>
+                                        <Rectangle Fill="#FF505057" Height="1" Margin="0,43,50,0" VerticalAlignment="Top" Opacity="0.6"/>
+                                    </Grid>
+                                    <Grid Margin="10,15,60,0" Height="74">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Страна" VerticalAlignment="Top" FontSize="20"/>
+                                        <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,35,0,0" Width="300"/>
+                                    </Grid>
+                                    <Grid Margin="10,15,0,0" Height="74">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Адресс" VerticalAlignment="Top" FontSize="20"/>
+                                        <StackPanel Margin="0,35,0,7" Orientation="Horizontal">
+                                            <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" PlaceholderText="ГОРОД"/>
+                                            <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Margin="20,0,0,0" PlaceholderText="УЛИЦА"/>
+                                            <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Margin="20,0,0,0" PlaceholderText="ДОМ"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="10,15,60,0" Height="70">
+                                        <TextBox
+                                            controls:TextBoxMask.Mask="+7999-999-99-99"
+                                            controls:TextBoxMask.PlaceHolder=" "
+                                            HeaderTemplate="{StaticResource HeaderTemplate}"
+                                            Header="Телефон"
+                                            Style="{StaticResource MaskedTextBoxStyle}" Margin="0" Width="300" HorizontalAlignment="Left" />
+                                    </Grid>
+                                    <Grid Margin="0,15,0,0" Height="84" HorizontalAlignment="Left" Width="321"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </PivotItem>
+                    </Pivot>
+                </Grid>
             </Frame>
         </SplitView>
     </Grid>

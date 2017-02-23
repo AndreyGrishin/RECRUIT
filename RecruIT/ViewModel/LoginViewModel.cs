@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Windows.UI.Xaml;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using RecruIT.Model;
-using RecruIT.Model.EmployeesModel;
-using RecruIT.Model.Users;
+using RecruIT.Model.DBModel;
+using RecruIT.View;
 
 
 namespace RecruIT.ViewModel
@@ -22,7 +20,7 @@ namespace RecruIT.ViewModel
 
         private string _title;
         public string ConfirmPassword { get; set; }
-
+        
         private User _newUser;
         private User _currentUser;
         private bool _registerVisibility;
@@ -96,7 +94,6 @@ namespace RecruIT.ViewModel
         {
             get
             {
-               
                 if (_loginCommand == null)
                     _loginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
                 return _loginCommand;
@@ -136,13 +133,25 @@ namespace RecruIT.ViewModel
             RegisterVisibility = !RegisterVisibility;
         }
 
-        public void ExecuteAddUserCommand()
+        public async void ExecuteAddUserCommand()
         {
-            using (var db = new UsersContext())
+            if (string.IsNullOrEmpty(_newUser.Name) && string.IsNullOrEmpty(_newUser.Login) 
+                && string.IsNullOrEmpty(_newUser.Password) && string.IsNullOrEmpty(ConfirmPassword))
+            {
+                await new MessageDialog("Заполните все необходимые поля").ShowAsync();
+                return;
+            }
+            if (_newUser.Password != ConfirmPassword)
+            {
+                await new MessageDialog("Введёные пароли не совпадают").ShowAsync();
+                return;
+            }
+            using (var db = new HrContext())
             {
                 db.Users.Add(_newUser);
                 db.SaveChanges();
             }
+            await new MessageDialog($"Новый пользователь {_newUser.Name} успешно добавлен").ShowAsync();
         }
 
         public bool CanExecuteLoginCommand()
@@ -154,15 +163,43 @@ namespace RecruIT.ViewModel
             return true;
         }
 
-        public void ExecuteLoginCommand()
+        public async void ExecuteLoginCommand()
         {
-            _addUserCommand.RaiseCanExecuteChanged();
-            using (var db = new UsersContext())
+            if (string.IsNullOrEmpty(_currentUser.Login) && string.IsNullOrEmpty(_currentUser.Password))
             {
-                if (db.Users.Any(x => x.Login == CurrentUser.Login && x.Password == CurrentUser.Password))
+                await new MessageDialog("Введите логин и пароль для входа").ShowAsync();
+                return;
+            }
+            if (string.IsNullOrEmpty(_currentUser.Login))
+            {
+                await new MessageDialog("Введите логин").ShowAsync();
+                return;
+            }
+            if (string.IsNullOrEmpty(_currentUser.Password))
+            {
+                await new MessageDialog("Введите пароль").ShowAsync();
+                return;
+            }
+
+            _addUserCommand.RaiseCanExecuteChanged();
+            using (var db = new HrContext())
+            {
+                if (db.Users.Any(x => x.Login == CurrentUser.Login))
                 {
-                    _navigationService.NavigateTo("MainPage");
+                    if (db.Users.Any(x => x.Password == CurrentUser.Password))
+                    {
+                        _navigationService.NavigateTo("MainPage");
+                    }
+                    else
+                    {
+                        await new MessageDialog("Вы ввели неверный пароль. Попробуйте снова.").ShowAsync();
+                    }
                 }
+                else
+                {
+                    await new MessageDialog("Пользователя с таким логином не существует").ShowAsync();
+                }
+                
             }
         }
 

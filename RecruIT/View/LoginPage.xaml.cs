@@ -26,6 +26,7 @@ namespace RecruIT.View
         public LoginPage()
         {
             this.InitializeComponent();
+            
         }
     }
 }

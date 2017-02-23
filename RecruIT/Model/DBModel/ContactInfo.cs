@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RecruIT.Model.EmployeesModel
+namespace RecruIT.Model.DBModel
 {
         public class ContactInfo
         {

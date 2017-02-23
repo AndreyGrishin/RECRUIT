@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.EntityFrameworkCore;
 using RecruIT.Model;
-using RecruIT.Model.Employyes;
+using RecruIT.Model.DBModel;
 using RecruIT.View;
 
 namespace RecruIT
@@ -35,11 +35,7 @@ namespace RecruIT
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            using (var db = new UsersContext())
-            {
-                db.Database.Migrate();
-            }
-            using (var db = new EmployeesContext())
+            using (var db = new HrContext())
             {
                 db.Database.Migrate();
             }

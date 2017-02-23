@@ -35,33 +35,33 @@
         </Border>
         <controls:StackPanel controls:Grid.Column="1" Margin="0"  Orientation="Vertical">
             <controls:StackPanel x:Name="LoginPanel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" controls:Canvas.ZIndex="1" Height="370" Width="770" Margin="0,100,0,0">
-                <controls:TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Авторизация пользователя" VerticalAlignment="Top" FontSize="36" Foreground="#FFA0A0A0"/>
+                <controls:TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Авторизация пользователя" VerticalAlignment="Top" FontSize="36" Foreground="#FFEAEAEA"/>
                 <controls:StackPanel Margin="40,40,40,0" Height="78">
-                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding CurrentUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0" Height="32" HorizontalContentAlignment="Left" PlaceholderText="Введите логин"/>
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding CurrentUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0" Height="32" HorizontalContentAlignment="Left" PlaceholderText="Введите логин" Background="#CCFFFFFF"/>
                 </controls:StackPanel>
                 <controls:StackPanel Margin="40,15,40,0" Height="72">
-                    <controls:PasswordBox Margin="0,5,0,0" Password="{controls:Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" Height="32" PlaceholderText="Введите пароль"/>
+                    <controls:PasswordBox Margin="0,5,0,0" Password="{controls:Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" Height="32" PlaceholderText="Введите пароль" Background="#CCFFFFFF"/>
                 </controls:StackPanel>
                 <controls:StackPanel Margin="40,25,216,0" Orientation="Horizontal">
                     <controls:Button Content="ВОЙТИ" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#00aff0" Foreground="#FF222222" Width="225" Height="45" FontSize="16" FontFamily="Segoe UI Light" Command="{controls:Binding LogIn}"/>
-                    <controls:HyperlinkButton Content="СОЗДАТЬ АККАУНТ" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25,0,0,0" Command="{Binding ShowRegistration}" Foreground="#FF888888"  FontSize="24"/>
+                    <controls:HyperlinkButton Content="СОЗДАТЬ АККАУНТ" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25,0,0,0" Command="{Binding ShowRegistration}" Foreground="#FFEAEAEA"  FontSize="24"/>
                 </controls:StackPanel>
             </controls:StackPanel>
             <controls:StackPanel x:Name="RegistrationPanel" Visibility="{Binding RegisterVisibility, Converter={StaticResource BooleanToVisibility}}" HorizontalAlignment="Center" Height="459" VerticalAlignment="Bottom" Width="735" Margin="18,50,17,0">
-                <controls:TextBlock TextWrapping="Wrap" Text="РЕГИСТРАЦИЯ" Foreground="#FF7F7F7F" FontSize="36" HorizontalAlignment="Center"/>
+                <controls:TextBlock TextWrapping="Wrap" Text="РЕГИСТРАЦИЯ" Foreground="#FFEAEAEA" FontSize="36" HorizontalAlignment="Center"/>
                 <controls:StackPanel Orientation="Vertical">
-                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Имя:">
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Имя:" Background="#CCFFFFFF">
                  
                     </controls:TextBox>
                 </controls:StackPanel>
                 <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
-                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Логин:"/>
+                    <controls:TextBox TextWrapping="Wrap" Text="{controls:Binding NewUser.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0" PlaceholderText="Логин:" Background="#CCFFFFFF"/>
                 </controls:StackPanel>
                 <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
-                    <controls:PasswordBox  Password="{controls:Binding NewUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Пароль:"/>
+                    <controls:PasswordBox x:Name="PasswordBox"  Password="{controls:Binding NewUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Пароль:" Background="#CCFFFFFF"/>
                 </controls:StackPanel>
                 <controls:StackPanel Orientation="Vertical" Margin="0,15,0,0">
-                    <controls:PasswordBox Password="{controls:Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Повторите пароль:"/>
+                    <controls:PasswordBox x:Name="ConfirmPasswordBox" Password="{controls:Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,15,0,0" PlaceholderText="Повторите пароль:" Background="#CCFFFFFF"/>
                 </controls:StackPanel>
                 <controls:Button Content="ПОДТВЕРДИТЬ" HorizontalAlignment="Left" Command="{controls:Binding AddUser}" VerticalAlignment="Stretch" Background="#00aff0" Foreground="#FF222222" Width="225" Height="45" FontSize="16" Margin="0,25,0,0" FontFamily="Segoe UI Light"/>
             </controls:StackPanel>

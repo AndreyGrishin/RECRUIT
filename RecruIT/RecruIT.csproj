@@ -95,13 +95,19 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\EmployeesModel\ContactInfo.cs" />
-    <Compile Include="Model\EmployeesModel\Employees.cs" />
-    <Compile Include="Model\EmployeesModel\EmployeesContext.cs" />
-    <Compile Include="Model\EmployeesModel\User.cs" />
+    <Compile Include="Migrations\20170223191458_DbMigration.cs" />
+    <Compile Include="Migrations\20170223191458_DbMigration.designer.cs">
+      <DependentUpon>20170223191458_DbMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\HrContextModelSnapshot.cs" />
+    <Compile Include="Model\DBModel\ContactInfo.cs" />
+    <Compile Include="Model\DBModel\Employees.cs" />
+    <Compile Include="Model\DBModel\HrContext.cs" />
+    <Compile Include="Model\DBModel\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
