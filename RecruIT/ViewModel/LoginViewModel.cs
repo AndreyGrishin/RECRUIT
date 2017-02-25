@@ -2,13 +2,14 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using RecruIT.Model.DBModel;
-using RecruIT.View;
 
 
 namespace RecruIT.ViewModel
@@ -25,6 +26,11 @@ namespace RecruIT.ViewModel
         private User _currentUser;
         private bool _registerVisibility;
 
+        private RelayCommand _addUserCommand;
+        private RelayCommand _loginCommand;
+        private RelayCommand _showRegistrarionCommand;
+
+#region Properties
         public bool RegisterVisibility
         {
             get
@@ -44,17 +50,16 @@ namespace RecruIT.ViewModel
             {
                 if (_newUser == null)
                     _newUser = new User();
+                
                 return _newUser;
             }
             set
             {
-
                 _newUser = value;
                 RaisePropertyChanged(() => NewUser);
             }
         }
-        
-
+       
         public User CurrentUser
         {
             get
@@ -85,17 +90,21 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => Title);
             }
         }
+#endregion
 
-        RelayCommand _addUserCommand;
-        RelayCommand _loginCommand;
-        RelayCommand _showRegistrarionCommand;
+#region Commands
 
         public ICommand LogIn
         {
             get
             {
                 if (_loginCommand == null)
-                    _loginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
+                    _loginCommand = new RelayCommand(ExecuteLoginCommand, () =>
+                    {
+                        if (string.IsNullOrEmpty(CurrentUser.Login) || string.IsNullOrEmpty(CurrentUser.Password))
+                            return false;
+                        return true;
+                    });
                 return _loginCommand;
             }
         }
@@ -111,7 +120,6 @@ namespace RecruIT.ViewModel
 
         public ICommand AddUser
         {
-            
             get
             {
                 
@@ -119,10 +127,13 @@ namespace RecruIT.ViewModel
                     _addUserCommand = new RelayCommand(ExecuteAddUserCommand,
                         () =>
                         {
-                            //if (string.IsNullOrEmpty(NewUser.Name))
-                            //    return false;
+                            
+                            if (string.IsNullOrEmpty(NewUser.Name) || string.IsNullOrEmpty(NewUser.Login) 
+                            || string.IsNullOrEmpty(NewUser.Password))
+                                return false;
                             return true;
                         });
+                
                 return _addUserCommand;
             }
         }
@@ -152,15 +163,16 @@ namespace RecruIT.ViewModel
                 db.SaveChanges();
             }
             await new MessageDialog($"Новый пользователь {_newUser.Name} успешно добавлен").ShowAsync();
+            ClearRegisterForm();
+            ExecuteShowRegistrationCommand();
         }
 
-        public bool CanExecuteLoginCommand()
+        private void ClearRegisterForm()
         {
-            //if (string.IsNullOrEmpty(NewUser.Name) ||
-            //    string.IsNullOrEmpty(NewUser.Login) ||
-            //    string.IsNullOrEmpty(NewUser.Password))
-            //    return false;
-            return true;
+            _newUser.Login = null;
+            _newUser.Name = null;
+            _newUser.Password = null;
+            ConfirmPassword = null;
         }
 
         public async void ExecuteLoginCommand()
@@ -189,6 +201,7 @@ namespace RecruIT.ViewModel
                     if (db.Users.Any(x => x.Password == CurrentUser.Password))
                     {
                         _navigationService.NavigateTo("MainPage");
+                        ClearLoginForm();
                     }
                     else
                     {
@@ -203,6 +216,34 @@ namespace RecruIT.ViewModel
             }
         }
 
+        private void ClearLoginForm()
+        {
+            _currentUser.Login = null;
+            _currentUser.Password = null;
+        }
+
+#endregion
+
+
+#region Events     
+        public void TextBoxChangedEvent_LogIn(object sender, TextBoxTextChangingEventArgs e)
+        {
+            _loginCommand.RaiseCanExecuteChanged();
+        }
+        public void PasswordBoxChangedEvent_LogIn(object sender, RoutedEventArgs e)
+        {
+            _loginCommand.RaiseCanExecuteChanged();
+        }
+        public void TextBoxChangedEvent_AddNewUser(object sender, TextBoxTextChangingEventArgs e)
+        {
+            _addUserCommand.RaiseCanExecuteChanged();
+        }
+        public void PasswordBoxChangedEvent_AddNewUser(object sender, RoutedEventArgs e)
+        {
+            _addUserCommand.RaiseCanExecuteChanged();
+        }
+
+        #endregion
 
         public LoginViewModel(INavigationService navigationService)
         {

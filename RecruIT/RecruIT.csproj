@@ -168,6 +168,8 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\Images\hr.jpeg" />
+    <Content Include="Resources\Images\LinkidinIco.png" />
+    <Content Include="Resources\Images\skypeico.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

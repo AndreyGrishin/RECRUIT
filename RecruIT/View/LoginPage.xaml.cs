@@ -28,5 +28,8 @@ namespace RecruIT.View
             this.InitializeComponent();
             
         }
+
+        public LoginViewModel LoginViewModel => (LoginViewModel)DataContext;
+
     }
 }

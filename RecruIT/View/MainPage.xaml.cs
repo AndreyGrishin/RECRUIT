@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp;
 using Windows.UI.Xaml.Navigation;
+using RecruIT.ViewModel;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,6 +28,8 @@ namespace RecruIT.View
         {
             this.InitializeComponent();
         }
+
+        public MainViewModel MainViewModel => (MainViewModel)DataContext;
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -51,5 +54,7 @@ namespace RecruIT.View
         {
             mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
         }
+
+
     }
 }
