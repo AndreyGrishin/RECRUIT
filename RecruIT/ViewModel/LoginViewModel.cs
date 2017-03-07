@@ -22,8 +22,8 @@ namespace RecruIT.ViewModel
         private string _title;
         public string ConfirmPassword { get; set; }
         
-        private User _newUser;
-        private User _currentUser;
+        private Users _newUser;
+        private Users _currentUser;
         private bool _registerVisibility;
 
         private RelayCommand _addUserCommand;
@@ -44,12 +44,12 @@ namespace RecruIT.ViewModel
             }
         }
 
-        public User NewUser
+        public Users NewUser
         {
             get
             {
                 if (_newUser == null)
-                    _newUser = new User();
+                    _newUser = new Users();
                 
                 return _newUser;
             }
@@ -60,12 +60,12 @@ namespace RecruIT.ViewModel
             }
         }
        
-        public User CurrentUser
+        public Users CurrentUser
         {
             get
             {
                 if (_currentUser == null)
-                    _currentUser = new User();
+                    _currentUser = new Users();
                 return _currentUser;
             }
             set

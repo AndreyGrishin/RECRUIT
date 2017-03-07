@@ -100,10 +100,13 @@
       <DependentUpon>20170223191458_DbMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\HrContextModelSnapshot.cs" />
+    <Compile Include="Model\DBLoader.cs" />
     <Compile Include="Model\DBModel\ContactInfo.cs" />
+    <Compile Include="Model\DBModel\Departments.cs" />
     <Compile Include="Model\DBModel\Employees.cs" />
     <Compile Include="Model\DBModel\HrContext.cs" />
-    <Compile Include="Model\DBModel\User.cs" />
+    <Compile Include="Model\DBModel\Posts.cs" />
+    <Compile Include="Model\DBModel\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />

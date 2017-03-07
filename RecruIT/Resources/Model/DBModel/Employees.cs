@@ -4,7 +4,6 @@ namespace RecruIT.Model.DBModel
 {
     public class Employees
     {
-
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -35,5 +34,6 @@ namespace RecruIT.Model.DBModel
         {
             return string.Format("{0} {1} {2} {3} {4} {5} {6}", Id, FirstName, MiddleName, LastName, Post, Gender, BirthDate);
         }
+
     }
 }

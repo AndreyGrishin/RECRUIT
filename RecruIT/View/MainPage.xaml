@@ -11,12 +11,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding Source={StaticResource ResourceKey=Locator}, Path=Main}"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
-    </Page.Resources>    
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -280,6 +283,34 @@
                                                 Content="Женский" />
                                         </ComboBox>
                                     </Grid>
+                                    <Grid Height="74" Margin="10,15,60,0">
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            FontSize="20"
+                                            Text="Должность"
+                                            TextWrapping="Wrap" />
+                                        <ComboBox
+                                            Width="300"
+                                            Margin="0,32,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            SelectedIndex="0"
+                                            SelectedValue="{Binding NewEmployee.Gender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBoxItem
+                                                Content="Разработчик (Developer)" />
+                                            <ComboBoxItem
+                                                Content="Руководитель проектов (Project Manager)" />
+                                            <ComboBoxItem
+                                                Content="Руководитель группы (Team Leader)" />
+                                            <ComboBoxItem
+                                                Content="Архитектор (Architect)" />
+                                            <ComboBoxItem
+                                                Content="Руководитель группы (Team Leader)" />
+                                            <ComboBoxItem
+                                                Content="Руководитель группы (Team Leader)" />
+                                        </ComboBox>
+                                    </Grid>
                                     <Grid Height="44" Margin="0,15,10,0">
                                         <StackPanel Margin="0,0,0,1" Orientation="Horizontal">
                                             <TextBlock
@@ -420,6 +451,9 @@
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
+                        </PivotItem>
+                        <PivotItem Header="Отделы">
+                            <Grid/>
                         </PivotItem>
                     </Pivot>
                 </Grid>
