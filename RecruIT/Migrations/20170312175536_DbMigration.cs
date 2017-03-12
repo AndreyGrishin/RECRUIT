@@ -29,6 +29,19 @@ namespace RecruIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -44,6 +57,27 @@ namespace RecruIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DepartmentId = table.Column<int>(nullable: false),
+                    DepartmentsId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_Departments_DepartmentsId",
+                        column: x => x.DepartmentsId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -56,7 +90,7 @@ namespace RecruIT.Migrations
                     Gender = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     MiddleName = table.Column<string>(nullable: true),
-                    Post = table.Column<string>(nullable: true),
+                    PostId = table.Column<int>(nullable: true),
                     StartDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -68,12 +102,28 @@ namespace RecruIT.Migrations
                         principalTable: "ContectInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Employees_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_ContactInfoId",
                 table: "Employees",
                 column: "ContactInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_PostId",
+                table: "Employees",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_DepartmentsId",
+                table: "Posts",
+                column: "DepartmentsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -86,6 +136,12 @@ namespace RecruIT.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContectInfo");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
         }
     }
 }

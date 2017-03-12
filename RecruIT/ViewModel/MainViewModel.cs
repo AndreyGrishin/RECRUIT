@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using RecruIT.Model;
 using RecruIT.Model.DBModel;
 
 namespace RecruIT.ViewModel
@@ -15,15 +16,20 @@ namespace RecruIT.ViewModel
         public RelayCommand NavigateCommand { get; private set; }
 
         public static ObservableCollection<Employees> Employeese => GetAllEmployees();
-        private Employees _newEmployee;
-        private ContactInfo _newContactInfo;
-        private int _pivotPage;
+        public static ObservableCollection<Departments> Departments => GetDepartments();
+        public  ObservableCollection<Posts> Posts
+        {
+            get { return GetPosts(); }
+            set { RaisePropertyChanged(() => Posts); }
+        }
 
-
+        #region Properties      
         public bool IsCountEmployeeEmpty
         {
             get
             {
+                if (Employeese == null)
+                    return true;
                 return Employeese.Count == 0;
             }
             set
@@ -32,6 +38,7 @@ namespace RecruIT.ViewModel
             }
         }
 
+        private int _pivotPage;
         public int PivotPage
         {
             get
@@ -44,6 +51,8 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => PivotPage);
             }
         }
+
+        private Employees _newEmployee;
         public Employees NewEmployee
         {
             get
@@ -59,6 +68,39 @@ namespace RecruIT.ViewModel
             }
         }
 
+        private Departments _newDepartments;
+        public Departments NewDepartment
+        {
+            get
+            {
+                if (_newDepartments == null)
+                    _newDepartments = new Departments();
+                return _newDepartments;
+            }
+            set
+            {
+                _newDepartments = value;
+                RaisePropertyChanged(() => NewDepartment);
+            }
+        }
+
+        private Posts _newPosts;
+        public Posts NewPost
+        {
+            get
+            {
+                if (_newPosts == null)
+                    _newPosts = new Posts();
+                return _newPosts;
+            }
+            set
+            {
+                _newPosts = value;
+                RaisePropertyChanged(() => NewPost);
+            }
+        }
+
+        private ContactInfo _newContactInfo;
         public ContactInfo NewContactInfo
         {
             get
@@ -74,8 +116,10 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => NewContactInfo);
             }
         }
+        #endregion
 
-        
+        #region Commands
+      
         private RelayCommand _addNewEmployeeCommand;
         private RelayCommand _logOut;
         
@@ -96,6 +140,7 @@ namespace RecruIT.ViewModel
                             using (var db = new HrContext())
                             {
                                 _newEmployee.ContactInfo = NewContactInfo;
+                                _newEmployee.Post = NewPost;                              
                                 db.Employees.Add(_newEmployee);
                                 db.SaveChanges();
                                 ClearEmployeeForm();
@@ -108,17 +153,50 @@ namespace RecruIT.ViewModel
             }
         }
 
+        public ICommand LogOut
+        {
+            get
+            {
+                if (_logOut == null)
+                    _logOut = new RelayCommand(() =>
+                    {
+                        _navigationService.NavigateTo("LoginPage");
+                    });
+                return _logOut;
+            }
+        }
+        #endregion
+
+        #region Methods
         private static ObservableCollection<Employees> GetAllEmployees()
         {
-            ObservableCollection<Employees> employeese = new ObservableCollection<Employees>();
             using (var db = new HrContext())
             {
-                foreach (var emp in db.Employees)
-                {
-                    employeese.Add(emp);
-                }   
+                return new ObservableCollection<Employees>(db.Employees.ToList());
             }
-            return employeese;
+        }
+
+        private static ObservableCollection<Departments> GetDepartments()
+        {
+            if (DbLoader.IsDepartmentsEmpty())
+            {
+               return new ObservableCollection<Departments>(DbLoader.GetDefaultDepartments());
+            }
+            using (var db  = new HrContext())
+            {
+                return new ObservableCollection<Departments>(db.Departments.ToList());
+            }
+        }
+        private  ObservableCollection<Posts> GetPosts()
+        {
+            if (DbLoader.IsPostsEmpty())
+            {
+                return new ObservableCollection<Posts>(DbLoader.GetDefaultPosts(NewDepartment.Id));
+            }
+            using (var db = new HrContext())
+            {
+                return new ObservableCollection<Posts>(db.Posts.Where(x => x.DepartmentId == 1).ToList());
+            }
         }
 
 
@@ -140,20 +218,26 @@ namespace RecruIT.ViewModel
             _newContactInfo.Skype = null;
             _newContactInfo.Street = null;
         }
+        #endregion
 
-        public ICommand LogOut
+        #region Events
+
+        public void TestTimeChangedEvent(object sender, DatePickerValueChangedEventArgs e)
         {
-            get
-            {
-                if (_logOut == null)
-                    _logOut = new RelayCommand(() =>
-                    {
-                        _navigationService.NavigateTo("LoginPage");
-                    });
-                return _logOut;
-            }
+            _newEmployee.BirthDate = e.NewDate.DateTime;
         }
-
+        public void DepartmentsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Posts = GetPosts();
+        }
+        public void PostsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedPost = (sender as ComboBox)?.SelectedItem as Posts;
+            if (selectedPost != null)
+                NewPost = selectedPost;
+            
+        }
+        #endregion
         public MainViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -165,9 +249,6 @@ namespace RecruIT.ViewModel
             _navigationService.NavigateTo("MainPage");
         }
 
-        public void TestTimeChangedEvent(object sender, DatePickerValueChangedEventArgs e)
-        {
-            _newEmployee.BirthDate = e.NewDate.DateTime;
-        }
+
     }
 }

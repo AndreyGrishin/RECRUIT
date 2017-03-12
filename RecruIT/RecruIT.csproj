@@ -95,9 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20170223191458_DbMigration.cs" />
-    <Compile Include="Migrations\20170223191458_DbMigration.designer.cs">
-      <DependentUpon>20170223191458_DbMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20170312182919_DbMigration.cs" />
+    <Compile Include="Migrations\20170312182919_DbMigration.designer.cs">
+      <DependentUpon>20170312182919_DbMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\HrContextModelSnapshot.cs" />
     <Compile Include="Model\DBLoader.cs" />
@@ -111,6 +111,7 @@
     <Compile Include="ViewModel\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\PostConverterToString.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>

@@ -13,6 +13,10 @@ namespace RecruIT.Model.DBModel
         public int DepartmentId { get; set; }
         private Departments Department { get; set; }
 
+        public Posts()
+        {
+            
+        }
         public Posts(string name, int departmentId)
         {
             Name = name;

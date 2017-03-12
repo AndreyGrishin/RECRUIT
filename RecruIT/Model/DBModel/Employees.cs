@@ -9,16 +9,16 @@ namespace RecruIT.Model.DBModel
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        public string Post { get; set; }
         public string Gender { get; set; }
         public DateTime BirthDate { get; set; }
         public int ContactsInfoId { get; set; }
         public ContactInfo ContactInfo { get; set; }
+        public Posts Post { get; set; }
         public DateTime StartDate { get; set; }
 
         public Employees() { }
 
-        public Employees(int id, string firstName, string middleName, string lastName, string post, string gender, DateTime birthDate, ContactInfo contactInfo, DateTime startDate)
+        public Employees(int id, string firstName, string middleName, string lastName, Posts post, string gender, DateTime birthDate, ContactInfo contactInfo, DateTime startDate)
         {
             Id = id;
             FirstName = firstName;

@@ -8,13 +8,13 @@ using RecruIT.Model.DBModel;
 namespace RecruIT.Migrations
 {
     [DbContext(typeof(HrContext))]
-    [Migration("20170223191458_DbMigration")]
+    [Migration("20170312175536_DbMigration")]
     partial class DbMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
+                .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("RecruIT.Model.DBModel.ContactInfo", b =>
                 {
@@ -42,6 +42,18 @@ namespace RecruIT.Migrations
                     b.ToTable("ContectInfo");
                 });
 
+            modelBuilder.Entity("RecruIT.Model.DBModel.Departments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("RecruIT.Model.DBModel.Employees", b =>
                 {
                     b.Property<int>("Id")
@@ -61,7 +73,7 @@ namespace RecruIT.Migrations
 
                     b.Property<string>("MiddleName");
 
-                    b.Property<string>("Post");
+                    b.Property<int?>("PostId");
 
                     b.Property<DateTime>("StartDate");
 
@@ -69,10 +81,30 @@ namespace RecruIT.Migrations
 
                     b.HasIndex("ContactInfoId");
 
+                    b.HasIndex("PostId");
+
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("RecruIT.Model.DBModel.User", b =>
+            modelBuilder.Entity("RecruIT.Model.DBModel.Posts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DepartmentId");
+
+                    b.Property<int?>("DepartmentsId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentsId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("RecruIT.Model.DBModel.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -93,6 +125,17 @@ namespace RecruIT.Migrations
                     b.HasOne("RecruIT.Model.DBModel.ContactInfo", "ContactInfo")
                         .WithMany("Employees")
                         .HasForeignKey("ContactInfoId");
+
+                    b.HasOne("RecruIT.Model.DBModel.Posts", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+                });
+
+            modelBuilder.Entity("RecruIT.Model.DBModel.Posts", b =>
+                {
+                    b.HasOne("RecruIT.Model.DBModel.Departments")
+                        .WithMany("Posts")
+                        .HasForeignKey("DepartmentsId");
                 });
         }
     }

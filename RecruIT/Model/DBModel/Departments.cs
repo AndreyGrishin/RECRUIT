@@ -13,9 +13,9 @@ namespace RecruIT.Model.DBModel
 
         public List<Posts> Posts { get; set; }
 
-        public Departments(string name)
+        public Departments()
         {
-            Name = name;
+            
         }
         public Departments(int id, string name)
         {

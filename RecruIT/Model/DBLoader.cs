@@ -15,21 +15,44 @@ namespace RecruIT.Model
            new Departments(2,"Дизайнеры (Designers)"),
            new Departments(3,"QA (Quality Assurance)"),
            new Departments(4,"Менеджеры (Managers)"),
-           new Departments(5,"Администраторы (Administrators)")
+           new Departments(5,"Администраторы (Administrators)"),
+           new Departments(6, "Управление персоналом (HR)")
         };
 
         private static List<Posts> defaultPosts = new List<Posts>
         {
             new Posts("Разработчик (Developer)",1),
             new Posts("Системный администратор",5),
+            new Posts("Тестировщик",3),
+            new Posts("HR менеджер",6),
+            new Posts("Специалист по привлечению клиентов",4),
+            new Posts("Дизайнер UI/UX интерфейсов",2)
         };
 
         public static bool IsPostsEmpty()
         {
             using (var db = new HrContext())
             {
-               return db.Posts.Any();
+                return db.Posts.Count() == 0;
             }
         }
+        public static bool IsDepartmentsEmpty()
+        {
+            using (var db = new HrContext())
+            {
+                return db.Departments.Count() == 0;
+            }
+        }
+
+        public static List<Posts> GetDefaultPosts(int departmentId)
+        {
+            return defaultPosts.Where(x => x.DepartmentId == departmentId).ToList();
+        }
+
+        public static List<Departments> GetDefaultDepartments()
+        {
+            return defaultDepartments;
+        }
+
     }
 }
