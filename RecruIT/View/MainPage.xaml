@@ -114,7 +114,7 @@
                         Height="50"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
-                        Command="{Binding LogOut}"
+                        Command="{Binding LogOutCommand}"
                         Content="Выход"
                         FontFamily="Arial"
                         FontSize="22"
@@ -157,9 +157,9 @@
                                     VerticalAlignment="Center"
                                     FontFamily="Arial"
                                     FontSize="36"
-                                    Visibility="{Binding IsCountEmployeeEmpty, Converter={StaticResource BooleanToVisibility}}"
                                     Text="Список сотрудников пока что пуст"
-                                    TextWrapping="Wrap" />
+                                    TextWrapping="Wrap"
+                                    Visibility="{Binding IsCountEmployeeEmpty, Converter={StaticResource BooleanToVisibility}}" />
                                 <controls:AdaptiveGridView
                                     x:Name="AdaptiveGridViewControl"
                                     Margin="0,0,0,53"
@@ -280,7 +280,10 @@
                                                 Content="Женский" />
                                         </ComboBox>
                                     </Grid>
-                                    <StackPanel Height="74" Margin="10,15,60,0" Orientation="Horizontal">
+                                    <StackPanel
+                                        Height="74"
+                                        Margin="10,15,60,0"
+                                        Orientation="Horizontal">
                                         <StackPanel Margin="0">
                                             <TextBlock
                                                 HorizontalAlignment="Left"
@@ -288,15 +291,16 @@
                                                 FontSize="20"
                                                 Text="Отдел"
                                                 TextWrapping="Wrap" />
-                                            <ComboBox x:Name="DepartmentsComboBox"
+                                            <ComboBox
+                                                x:Name="DepartmentsComboBox"
                                                 Width="300"
+                                                Margin="0,5,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                Margin="0,5,0,0"
-                                                SelectionChanged="{x:Bind MainViewModel.DepartmentsComboBox_SelectionChanged}"
-                                                SelectedItem="{Binding NewDepartment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                ItemsSource="{Binding Departments, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource DepartmentsDataTemplate}">
-                                            </ComboBox>
+                                                ItemTemplate="{StaticResource DepartmentsDataTemplate}"
+                                                ItemsSource="{Binding Departments, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedItem="{Binding SelectedDepartment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                SelectionChanged="{x:Bind MainViewModel.DepartmentsComboBox_SelectionChanged}" />
                                         </StackPanel>
                                         <StackPanel Margin="20,0,0,0">
                                             <TextBlock
@@ -305,14 +309,15 @@
                                                 FontSize="20"
                                                 Text="Должность"
                                                 TextWrapping="Wrap" />
-                                            <ComboBox x:Name="PostsComboBox"
+                                            <ComboBox
+                                                x:Name="PostsComboBox"
                                                 Width="300"
+                                                Margin="0,5,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                Margin="0,5,0,0"
-                                                SelectionChanged="{x:Bind MainViewModel.PostsComboBox_SelectionChanged}"
-                                                ItemsSource="{Binding Posts}" ItemTemplate="{StaticResource DepartmentsDataTemplate}">
-                                            </ComboBox>
+                                                ItemTemplate="{StaticResource DepartmentsDataTemplate}"
+                                                ItemsSource="{Binding SelectablePosts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                SelectionChanged="{x:Bind MainViewModel.PostsComboBox_SelectionChanged}" />
                                         </StackPanel>
                                     </StackPanel>
                                     <Grid Height="44" Margin="0,15,10,0">
@@ -456,13 +461,102 @@
                                 </StackPanel>
                             </ScrollViewer>
                         </PivotItem>
-                        <PivotItem Header="Отделы">
-                            <Grid/>
+                        <PivotItem Margin="0" Header="Отделы и должности">
+                            <Grid>
+                                <ContentDialog
+                                    x:Name="AddPostContentDialog"
+                                    Title="Введите название должности"
+                                    VerticalAlignment="Stretch"
+                                    Canvas.ZIndex="1"
+                                    PrimaryButtonCommand="{Binding AddPostCommand}"
+                                    PrimaryButtonText="OK"
+                                    SecondaryButtonText="Cancel">
+                                    <StackPanel Margin="0,0,0,-4">
+                                        <TextBox
+                                            Margin="0,9,0,0"
+                                            PlaceholderText="Название должности"
+                                            Text="{Binding NewPost.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+
+                                </ContentDialog>
+                                <controls:AdaptiveGridView
+                                    x:Name="DepartmentsGridView"
+                                    Margin="0,15,0,53"
+                                    DesiredWidth="210"
+                                    ItemHeight="400"
+                                    SelectionChanged="{x:Bind MainViewModel.DepartmentsGridView_SelectionChanged}"                                  
+                                    ItemsSource="{Binding Departments}">
+                                    <controls:AdaptiveGridView.Resources>
+                                        <DataTemplate x:Key="DataTemplateDepartments">
+                                            <Grid Width="250" Height="500">
+                                                <Border
+                                                    Background="#FFECEEEF"
+                                                    BorderThickness="0"
+                                                    CornerRadius="4">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                                        <StackPanel Width="250" Height="500">
+                                                            <TextBlock
+                                                                Margin="15,10,0,0"
+                                                                FontFamily="Arial"
+                                                                FontSize="16"
+                                                                Text="{Binding Name}"
+                                                                TextWrapping="Wrap" />
+                                                            <GridView
+                                                                Margin="0,20,0,0"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Top"
+                                                                ItemTemplate="{StaticResource DataTemplatePosts}"
+                                                                ItemsSource="{Binding Posts}" />
+                                                            <Button
+                                                                Margin="0,5,0,0"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Stretch"
+                                                                Command="{Binding DataContext.ShowDialogShowDialogAddPostCommand, ElementName=DepartmentsGridView}"
+                                                                Content="&#xECC8;"
+                                                                FontFamily="Segoe MDL2 Assets"
+                                                                FontSize="36"
+                                                                Style="{StaticResource AddPostButtonStyle}" />
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </controls:AdaptiveGridView.Resources>
+                                    <controls:AdaptiveGridView.ItemTemplate>
+                                        <StaticResource ResourceKey="DataTemplateDepartments" />
+                                    </controls:AdaptiveGridView.ItemTemplate>
+                                </controls:AdaptiveGridView>
+                                <ContentDialog
+                                    x:Name="AddDepartmentContentDialog"
+                                    Title="Введите название отдела"
+                                    VerticalAlignment="Stretch"
+                                    Canvas.ZIndex="1"
+                                    PrimaryButtonCommand="{Binding AddDepartmentCommand}"
+                                    PrimaryButtonText="OK"
+                                    SecondaryButtonText="Cancel" Margin="771.5,0">
+                                    <StackPanel Margin="0,0,0,-4">
+                                        <TextBox
+                                            Margin="0,9,0,0"
+                                            PlaceholderText="Название отдела"
+                                            Text="{Binding NewDepartment.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+
+                                </ContentDialog>
+                            </Grid>
                         </PivotItem>
                     </Pivot>
                 </Grid>
             </Frame>
         </SplitView>
+        <TextBlock
+            Grid.Row="1"
+            Margin="1952,294,-41,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="TextBlock"
+            TextWrapping="Wrap" />
     </Grid>
 
 </Page>

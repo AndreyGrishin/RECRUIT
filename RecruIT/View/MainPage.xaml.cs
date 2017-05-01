@@ -22,14 +22,19 @@ namespace RecruIT.View
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IView
     {
         public MainPage()
         {
+            MainViewModel = ViewModelLocator.Main;
+            MainViewModel.View = this as IView;
             this.InitializeComponent();
         }
 
-        public MainViewModel MainViewModel => (MainViewModel)DataContext;
+        public MainViewModel MainViewModel;
+
+        public ContentDialog addPostContentDialog => AddPostContentDialog;
+        public ContentDialog addDepartmentDialog => AddDepartmentContentDialog;
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -51,10 +56,27 @@ namespace RecruIT.View
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
         }
 
 
+        public async void ShowAddPostsDialogWindow()
+        {
+           await AddPostContentDialog.ShowAsync();
+        }
+
+        public async void ShowAddDepartmentDialogWindow()
+        {
+            await AddDepartmentContentDialog.ShowAsync();
+        }
+
+
+    }
+    public interface IView
+    {
+        void ShowAddPostsDialogWindow();
+
+        void ShowAddDepartmentDialogWindow();
     }
 }

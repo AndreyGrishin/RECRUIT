@@ -13,18 +13,18 @@ namespace RecruIT.Model.DBModel
         public DateTime BirthDate { get; set; }
         public int ContactsInfoId { get; set; }
         public ContactInfo ContactInfo { get; set; }
-        public Posts Post { get; set; }
+        public int PostId { get; set; }
         public DateTime StartDate { get; set; }
 
         public Employees() { }
 
-        public Employees(int id, string firstName, string middleName, string lastName, Posts post, string gender, DateTime birthDate, ContactInfo contactInfo, DateTime startDate)
+        public Employees(int id, string firstName, string middleName, string lastName, int postId, string gender, DateTime birthDate, ContactInfo contactInfo, DateTime startDate)
         {
             Id = id;
             FirstName = firstName;
             MiddleName = middleName;
             LastName = lastName;
-            Post = post;
+            PostId = postId;
             Gender = gender;
             BirthDate = birthDate;
             ContactInfo = contactInfo;
@@ -33,7 +33,7 @@ namespace RecruIT.Model.DBModel
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2} {3} {4} {5} {6}", Id, FirstName, MiddleName, LastName, Post, Gender, BirthDate);
+            return string.Format("{0} {1} {2} {3} {4} {5} {6}", Id, FirstName, MiddleName, LastName, PostId, Gender, BirthDate);
         }
     }
 }

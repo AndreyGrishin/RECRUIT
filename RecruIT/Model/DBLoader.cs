@@ -44,14 +44,38 @@ namespace RecruIT.Model
             }
         }
 
-        public static List<Posts> GetDefaultPosts(int departmentId)
-        {
-            return defaultPosts.Where(x => x.DepartmentId == departmentId).ToList();
+        public static void AddDefaultPosts()
+        {           
+            using (var db = new HrContext())
+            {
+                db.Posts.AddRangeAsync(defaultPosts);
+                db.SaveChangesAsync();
+            }         
         }
 
-        public static List<Departments> GetDefaultDepartments()
+        public static void AddDefaultDepartments()
         {
-            return defaultDepartments;
+            using (var db = new HrContext())
+            {
+                db.Departments.AddRangeAsync(defaultDepartments);
+                db.SaveChangesAsync();
+            }
+        }
+
+        internal static List<Posts> GetPosts(int departmentId)
+        {
+            using (var db = new HrContext())
+            {
+                return new List<Posts>(db.Posts.Where(x => x.DepartmentId == departmentId).ToList());
+            }
+        }
+
+        public static List<Departments> GetDepartments()
+        {
+            using (var db = new HrContext())
+            {
+                return new List<Departments>(db.Departments.ToList());
+            }
         }
 
     }

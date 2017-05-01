@@ -1,14 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Input;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using Microsoft.EntityFrameworkCore;
 using RecruIT.Model.DBModel;
 
 
@@ -19,18 +18,11 @@ namespace RecruIT.ViewModel
         private readonly INavigationService _navigationService;
         public RelayCommand NavigateCommand { get; private set; }
 
-        private string _title;
+        #region Properties
+
         public string ConfirmPassword { get; set; }
-        
-        private Users _newUser;
-        private Users _currentUser;
+
         private bool _registerVisibility;
-
-        private RelayCommand _addUserCommand;
-        private RelayCommand _loginCommand;
-        private RelayCommand _showRegistrarionCommand;
-
-#region Properties
         public bool RegisterVisibility
         {
             get
@@ -44,6 +36,7 @@ namespace RecruIT.ViewModel
             }
         }
 
+        private Users _newUser;
         public Users NewUser
         {
             get
@@ -59,7 +52,8 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => NewUser);
             }
         }
-       
+
+        private Users _currentUser;
         public Users CurrentUser
         {
             get
@@ -75,7 +69,7 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => CurrentUser);
             }
         }
-
+        private string _title;
         public string Title
         {
 
@@ -90,10 +84,10 @@ namespace RecruIT.ViewModel
                 RaisePropertyChanged(() => Title);
             }
         }
-#endregion
+        #endregion // Properties
 
-#region Commands
-
+        #region Commands
+        private RelayCommand _loginCommand;
         public ICommand LogIn
         {
             get
@@ -108,6 +102,8 @@ namespace RecruIT.ViewModel
                 return _loginCommand;
             }
         }
+
+        private RelayCommand _showRegistrarionCommand;
         public ICommand ShowRegistration
         {
             get
@@ -118,6 +114,7 @@ namespace RecruIT.ViewModel
             }
         }
 
+        private RelayCommand _addUserCommand;
         public ICommand AddUser
         {
             get
@@ -137,16 +134,22 @@ namespace RecruIT.ViewModel
                 return _addUserCommand;
             }
         }
+        #endregion // Commands
 
-
+        #region Methods
         public void ExecuteShowRegistrationCommand()
         {
             RegisterVisibility = !RegisterVisibility;
         }
 
+        private void NavigateCommandAction()
+        {
+            _navigationService.NavigateTo("RegisterPage");
+        }
+
         public async void ExecuteAddUserCommand()
         {
-            if (string.IsNullOrEmpty(_newUser.Name) && string.IsNullOrEmpty(_newUser.Login) 
+            if (string.IsNullOrEmpty(_newUser.Name) && string.IsNullOrEmpty(_newUser.Login)
                 && string.IsNullOrEmpty(_newUser.Password) && string.IsNullOrEmpty(ConfirmPassword))
             {
                 await new MessageDialog("Заполните все необходимые поля").ShowAsync();
@@ -194,26 +197,30 @@ namespace RecruIT.ViewModel
             }
 
             _addUserCommand.RaiseCanExecuteChanged();
+
             using (var db = new HrContext())
             {
-                if (db.Users.Any(x => x.Login == CurrentUser.Login))
+                await db.Users.ForEachAsync(async p =>
                 {
-                    if (db.Users.Any(x => x.Password == CurrentUser.Password))
+                    if (p.Login == CurrentUser.Login)
                     {
-                        _navigationService.NavigateTo("MainPage");
-                        ClearLoginForm();
+                        if (p.Password == CurrentUser.Password)
+                        {
+                            _navigationService.NavigateTo("MainPage");
+                            ClearLoginForm();
+                        }
+                        else
+                        {
+                            await new MessageDialog("Вы ввели неверный пароль. Попробуйте снова.").ShowAsync();
+                        }
                     }
                     else
                     {
-                        await new MessageDialog("Вы ввели неверный пароль. Попробуйте снова.").ShowAsync();
+                        await new MessageDialog("Пользователя с таким логином не существует").ShowAsync();
                     }
-                }
-                else
-                {
-                    await new MessageDialog("Пользователя с таким логином не существует").ShowAsync();
-                }
-                
+                });
             }
+
         }
 
         private void ClearLoginForm()
@@ -221,11 +228,9 @@ namespace RecruIT.ViewModel
             _currentUser.Login = null;
             _currentUser.Password = null;
         }
+        #endregion
 
-#endregion
-
-
-#region Events     
+        #region Events     
         public void TextBoxChangedEvent_LogIn(object sender, TextBoxTextChangingEventArgs e)
         {
             _loginCommand.RaiseCanExecuteChanged();
@@ -252,10 +257,7 @@ namespace RecruIT.ViewModel
             NavigateCommand = new RelayCommand(NavigateCommandAction);
         }
 
-        private void NavigateCommandAction()
-        {
-            _navigationService.NavigateTo("RegisterPage");
-        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string name)

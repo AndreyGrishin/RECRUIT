@@ -13,6 +13,8 @@ namespace RecruIT.Model.DBModel
         public int DepartmentId { get; set; }
         private Departments Department { get; set; }
 
+        public int Count => GetCount();
+
         public Posts()
         {
             
@@ -21,6 +23,14 @@ namespace RecruIT.Model.DBModel
         {
             Name = name;
             DepartmentId = departmentId;
+        }
+
+        private int GetCount()
+        {
+            using (var db = new HrContext())
+            {
+                return db.Employees.Count(x => x.PostId == Id);
+            }
         }
     }
 }
