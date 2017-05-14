@@ -21,7 +21,7 @@ namespace RecruIT.Migrations
                     LinkedIn = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
                     Skype = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(nullable: true)
+                    Street = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -91,7 +91,8 @@ namespace RecruIT.Migrations
                     LastName = table.Column<string>(nullable: true),
                     MiddleName = table.Column<string>(nullable: true),
                     PostId = table.Column<int>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    PhotoPath = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -140,33 +140,60 @@
                             <Grid />
                         </CommandBar.Content>
                         <AppBarButton
-                            Command="{Binding AddNewEmployeeCommand}"
+                            Command="{Binding AddCommand}"
                             Icon="Add"
                             Label="Добавить" />
-                        <AppBarButton Icon="Accept" Label="Обновить" />
-                        <AppBarButton Icon="Cancel" Label="Удалить" />
+                        <AppBarButton
+                            Command="{Binding UpdateCommand}"
+                            Icon="Accept"
+                            Label="Обновить" />
+                        <AppBarButton
+                            Command="{Binding DeleteCommand}"
+                            Icon="Cancel"
+                            Label="Удалить" />
                     </CommandBar>
                     <Pivot
                         Title=""
                         Foreground="#FF444141"
                         SelectedIndex="{Binding PivotPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <PivotItem Margin="0" Header="Сотрудники">
+                        <PivotItem
+                            Margin="0"
+                            Background="Transparent"
+                            Header="Сотрудники">
                             <Grid Margin="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10*" />
+                                    <RowDefinition Height="90*" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border
+                                    Background="White"
+                                    BorderBrush="#FFDAE2E8"
+                                    BorderThickness="0,1">
+                                    <Grid />
+                                </Border>
                                 <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    Canvas.ZIndex="1"
                                     FontFamily="Arial"
                                     FontSize="36"
                                     Text="Список сотрудников пока что пуст"
                                     TextWrapping="Wrap"
-                                    Visibility="{Binding IsCountEmployeeEmpty, Converter={StaticResource BooleanToVisibility}}" />
+                                    Visibility="{Binding IsCountEmployeeEmpty}" />
                                 <controls:AdaptiveGridView
                                     x:Name="AdaptiveGridViewControl"
-                                    Margin="0,0,0,53"
-                                    DesiredWidth="210"
+                                    Grid.Row="1"
+                                    Grid.RowSpan="2"
+                                    Margin="0,5,0,0"
+                                    Background="WhiteSmoke"
+                                    DesiredWidth="250"
                                     ItemHeight="280"
                                     ItemTemplate="{StaticResource EmployeesTemplate}"
-                                    ItemsSource="{Binding Employeese}" />
+                                    ItemsSource="{Binding Employeese, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    SelectedItem="{Binding SelectedEmployee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             </Grid>
                         </PivotItem>
                         <PivotItem Margin="0" Header="Анкета">
@@ -177,288 +204,301 @@
                                 HorizontalScrollBarVisibility="Auto"
                                 VerticalScrollBarVisibility="Auto"
                                 VerticalScrollMode="Auto">
-                                <StackPanel
-                                    Margin="0"
-                                    Orientation="Vertical"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                    <Grid Height="43" Margin="0,15,0,0">
-                                        <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
-                                            <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="36"
-                                                Foreground="#FF464343"
-                                                Text="&#xE13D;" />
-                                            <TextBlock
-                                                Margin="20,7,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                FontFamily="Arial"
-                                                FontSize="22"
-                                                Foreground="Black"
-                                                Text="Личная информация"
-                                                TextWrapping="Wrap" />
-                                        </StackPanel>
-                                        <Rectangle
-                                            Height="1"
-                                            Margin="0,42,60,0"
-                                            VerticalAlignment="Top"
-                                            Fill="#FF505057"
-                                            Opacity="0.6" />
-                                    </Grid>
-                                    <Grid Height="83" Margin="10,15,60,0">
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="20"
-                                            Text="ФИО"
-                                            TextWrapping="Wrap" />
-                                        <StackPanel Margin="0,37,0,0" Orientation="Horizontal">
-                                            <TextBox
-                                                x:Name="LName_TextBlock"
-                                                Width="172"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="ФАМИЛИЯ"
-                                                Text="{Binding NewEmployee.LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                            <TextBox
-                                                x:Name="FName_TextBlock"
-                                                Width="172"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="ИМЯ"
-                                                Text="{Binding NewEmployee.FirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                            <TextBox
-                                                x:Name="TName_TextBlock"
-                                                Width="172"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="ОТЧЕСТВО"
-                                                Text="{Binding NewEmployee.MiddleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Grid>
-                                    <Grid Height="82" Margin="10,15,60,0">
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="20"
-                                            Text="Дата рождения"
-                                            TextWrapping="Wrap" />
-                                        <DatePicker
-                                            x:Name="datePicker"
-                                            Margin="0,44,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Date="{Binding NewEmployee.BirthDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            DateChanged="{x:Bind MainViewModel.TestTimeChangedEvent}" />
-                                    </Grid>
-                                    <Grid Height="74" Margin="10,15,60,0">
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="20"
-                                            Text="Пол"
-                                            TextWrapping="Wrap" />
-                                        <ComboBox
-                                            Width="300"
-                                            Margin="0,32,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            SelectedIndex="0"
-                                            SelectedValue="{Binding NewEmployee.Gender, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                            <ComboBoxItem
-                                                Width="100"
-                                                Height="100"
-                                                Content="Мужской" />
-                                            <ComboBoxItem
-                                                Width="100"
-                                                Height="100"
-                                                Content="Женский" />
-                                        </ComboBox>
-                                    </Grid>
+                                <Grid>
                                     <StackPanel
-                                        Height="74"
-                                        Margin="10,15,60,0"
-                                        Orientation="Horizontal">
-                                        <StackPanel Margin="0">
+                                        Margin="0"
+                                        Orientation="Vertical"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                        <Grid Height="43" Margin="0,15,0,0">
+                                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontSize="36"
+                                                    Foreground="#FF464343"
+                                                    Text="&#xE13D;" />
+                                                <TextBlock
+                                                    Margin="20,7,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    FontFamily="Arial"
+                                                    FontSize="22"
+                                                    Foreground="Black"
+                                                    Text="Личная информация"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Rectangle
+                                                Height="1"
+                                                Margin="0,42,60,0"
+                                                VerticalAlignment="Top"
+                                                Fill="#FF505057"
+                                                Opacity="0.6" />
+                                        </Grid>
+                                        <Grid Height="83" Margin="10,15,60,0">
                                             <TextBlock
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 FontSize="20"
-                                                Text="Отдел"
+                                                Text="ФИО"
                                                 TextWrapping="Wrap" />
-                                            <ComboBox
-                                                x:Name="DepartmentsComboBox"
-                                                Width="300"
-                                                Margin="0,5,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                ItemTemplate="{StaticResource DepartmentsDataTemplate}"
-                                                ItemsSource="{Binding Departments, UpdateSourceTrigger=PropertyChanged}"
-                                                SelectedItem="{Binding SelectedDepartment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                SelectionChanged="{x:Bind MainViewModel.DepartmentsComboBox_SelectionChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Margin="20,0,0,0">
+                                            <StackPanel Margin="0,37,0,0" Orientation="Horizontal">
+                                                <TextBox
+                                                    x:Name="LName_TextBlock"
+                                                    Width="172"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="ФАМИЛИЯ"
+                                                    Text="{Binding NewEmployee.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBox
+                                                    x:Name="FName_TextBlock"
+                                                    Width="172"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="ИМЯ"
+                                                    Text="{Binding NewEmployee.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBox
+                                                    x:Name="TName_TextBlock"
+                                                    Width="172"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="ОТЧЕСТВО"
+                                                    Text="{Binding NewEmployee.MiddleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Height="82" Margin="10,15,60,0">
                                             <TextBlock
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 FontSize="20"
-                                                Text="Должность"
+                                                Text="Дата рождения"
                                                 TextWrapping="Wrap" />
-                                            <ComboBox
-                                                x:Name="PostsComboBox"
-                                                Width="300"
-                                                Margin="0,5,0,0"
+                                            <DatePicker
+                                                x:Name="datePicker"
+                                                Margin="0,44,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                ItemTemplate="{StaticResource DepartmentsDataTemplate}"
-                                                ItemsSource="{Binding SelectablePosts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                SelectionChanged="{x:Bind MainViewModel.PostsComboBox_SelectionChanged}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <Grid Height="44" Margin="0,15,10,0">
-                                        <StackPanel Margin="0,0,0,1" Orientation="Horizontal">
+                                                Date="{Binding NewEmployee.BirthDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                DateChanged="{x:Bind MainViewModel.TestTimeChangedEvent}" />
+                                        </Grid>
+                                        <Grid Height="74" Margin="10,15,60,0">
                                             <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="36"
-                                                Foreground="#FF464343"
-                                                Text="&#xE7EE;" />
-                                            <TextBlock
-                                                Margin="20,7,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                FontFamily="Arial"
-                                                FontSize="22"
-                                                Foreground="Black"
-                                                Text="Контактная информация"
-                                                TextWrapping="Wrap" />
-                                        </StackPanel>
-                                        <Rectangle
-                                            Height="1"
-                                            Margin="0,43,50,0"
-                                            VerticalAlignment="Top"
-                                            Fill="#FF505057"
-                                            Opacity="0.6" />
-                                    </Grid>
-                                    <Grid Height="74" Margin="10,15,60,0">
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="20"
-                                            Text="Страна"
-                                            TextWrapping="Wrap" />
-                                        <TextBox
-                                            Width="300"
-                                            Margin="0,35,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Text="{Binding NewContactInfo.Country, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            TextWrapping="Wrap" />
-                                    </Grid>
-                                    <Grid Height="74" Margin="10,15,0,0">
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="20"
-                                            Text="Адресс"
-                                            TextWrapping="Wrap" />
-                                        <StackPanel Margin="0,35,0,7" Orientation="Horizontal">
-                                            <TextBox
-                                                Width="300"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="ГОРОД"
-                                                Text="{Binding NewContactInfo.City, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                            <TextBox
-                                                Width="300"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="УЛИЦА"
-                                                Text="{Binding NewContactInfo.Street, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                            <TextBox
-                                                Width="300"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                PlaceholderText="ДОМ"
-                                                Text="{Binding NewContactInfo.Home, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Grid>
-                                    <Grid Height="70" Margin="10,15,60,0">
-                                        <TextBox
-                                            Width="300"
-                                            Margin="0"
-                                            HorizontalAlignment="Left"
-                                            controls:TextBoxMask.Mask="+7999-999-99-99"
-                                            controls:TextBoxMask.PlaceHolder=" "
-                                            Header="Телефон"
-                                            HeaderTemplate="{StaticResource HeaderTemplate}"
-                                            Style="{StaticResource MaskedTextBoxStyle}"
-                                            Text="{Binding NewContactInfo.Phone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                    </Grid>
-                                    <Grid
-                                        Width="300"
-                                        Height="84"
-                                        Margin="10,15,0,0"
-                                        HorizontalAlignment="Left">
-                                        <TextBox
-                                            x:Name="EmailValidatorForce"
-                                            controls:TextBoxRegex.ValidationType="Email"
-                                            Header="E-Mail"
-                                            HeaderTemplate="{StaticResource HeaderTemplate}"
-                                            Style="{StaticResource TextBoxRegexStyle}"
-                                            Text="{Binding NewContactInfo.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                    </Grid>
-                                    <Grid Height="74" Margin="10,0,60,0">
-                                        <StackPanel Margin="0,0,1664,39" Orientation="Horizontal">
-                                            <Image Source="ms-appx:///Resources/Images/skypeico.png" />
-                                            <TextBlock
-                                                Margin="10,0,0,0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
                                                 FontSize="20"
-                                                Text="Skype"
+                                                Text="Пол"
                                                 TextWrapping="Wrap" />
-                                        </StackPanel>
-                                        <TextBox
-                                            Width="300"
-                                            Margin="0,40,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Text="{Binding NewContactInfo.Skype, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            TextWrapping="Wrap" />
-                                    </Grid>
-                                    <Grid Height="74" Margin="10,15,60,0">
+                                            <ComboBox x:Name="GenderComboBox"
+                                                Width="300"
+                                                Margin="0,32,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                SelectedIndex="0"
+                                                SelectedValue="{Binding NewEmployee.Gender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <ComboBoxItem
+                                                    Width="100"
+                                                    Height="100"
+                                                    Content="Мужской" />
+                                                <ComboBoxItem
+                                                    Width="100"
+                                                    Height="100"
+                                                    Content="Женский" />
+                                            </ComboBox>
+                                        </Grid>
                                         <StackPanel
-                                            Margin="0,0,0,39"
-                                            VerticalAlignment="Top"
+                                            Height="100"
+                                            Margin="10,15,60,0"
                                             Orientation="Horizontal">
-                                            <Image Source="ms-appx:///Resources/Images/LinkidinIco.png" />
-                                            <TextBlock
-                                                Margin="10,0,0,0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="LinkedIn"
-                                                TextWrapping="Wrap" />
+                                            <StackPanel Margin="0">
+                                                <TextBlock
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    FontSize="20"
+                                                    Text="Отдел"
+                                                    TextWrapping="Wrap" />
+                                                <ComboBox
+                                                    x:Name="DepartmentsComboBox"
+                                                    Width="300"
+                                                    Margin="0,5,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    ItemTemplate="{StaticResource DepartmentsDataTemplate}"
+                                                    ItemsSource="{Binding Departments, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectedIndex="{Binding SelectedDepartmentIndex, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                                    SelectedItem="{Binding SelectedDepartment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectionChanged="{x:Bind MainViewModel.DepartmentsComboBox_SelectionChanged}" />
+                                            </StackPanel>
+                                            <StackPanel Margin="20,0,0,0" VerticalAlignment="Top">
+                                                <TextBlock
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    FontSize="20"
+                                                    Text="Должность"
+                                                    TextWrapping="Wrap" />
+                                                <ComboBox
+                                                    x:Name="PostsComboBox"
+                                                    Width="300"
+                                                    Margin="0,5,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    IsEnabled="{Binding IsEnablePostComboBox, UpdateSourceTrigger=PropertyChanged}"
+                                                    ItemTemplate="{StaticResource DepartmentsDataTemplate}"
+                                                    ItemsSource="{Binding SelectablePosts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectionChanged="{x:Bind MainViewModel.PostsComboBox_SelectionChanged}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <TextBox
+                                        <Grid Height="44" Margin="0,15,10,0">
+                                            <StackPanel Margin="0,0,0,1" Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontSize="36"
+                                                    Foreground="#FF464343"
+                                                    Text="&#xE7EE;" />
+                                                <TextBlock
+                                                    Margin="20,7,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    FontFamily="Arial"
+                                                    FontSize="22"
+                                                    Foreground="Black"
+                                                    Text="Контактная информация"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Rectangle
+                                                Height="1"
+                                                Margin="0,43,50,0"
+                                                VerticalAlignment="Top"
+                                                Fill="#FF505057"
+                                                Opacity="0.6" />
+                                        </Grid>
+                                        <Grid Height="74" Margin="10,15,60,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                FontSize="20"
+                                                Text="Страна"
+                                                TextWrapping="Wrap" />
+                                            <TextBox
+                                                Width="300"
+                                                Margin="0,35,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Text="{Binding NewContactInfo.Country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                        </Grid>
+                                        <Grid Height="74" Margin="10,15,0,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                FontSize="20"
+                                                Text="Адресс"
+                                                TextWrapping="Wrap" />
+                                            <StackPanel Margin="0,35,0,7" Orientation="Horizontal">
+                                                <TextBox
+                                                    Width="300"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="ГОРОД"
+                                                    Text="{Binding NewContactInfo.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBox
+                                                    Width="300"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="УЛИЦА"
+                                                    Text="{Binding NewContactInfo.Street, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBox
+                                                    Width="300"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    PlaceholderText="ДОМ"
+                                                    Text="{Binding NewContactInfo.Home, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Height="70" Margin="10,15,60,0">
+                                            <TextBox
+                                                Width="300"
+                                                Margin="0"
+                                                HorizontalAlignment="Left"
+                                                controls:TextBoxMask.Mask="+7999-999-99-99"
+                                                controls:TextBoxMask.PlaceHolder=" "
+                                                Header="Телефон"
+                                                HeaderTemplate="{StaticResource HeaderTemplate}"
+                                                Style="{StaticResource MaskedTextBoxStyle}"
+                                                Text="{Binding NewContactInfo.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+                                        <Grid
                                             Width="300"
-                                            Margin="0,40,0,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Text="{Binding NewContactInfo.LinkedIn, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            TextWrapping="Wrap" />
-                                    </Grid>
-                                </StackPanel>
+                                            Height="84"
+                                            Margin="10,15,0,0"
+                                            HorizontalAlignment="Left">
+                                            <TextBox
+                                                x:Name="EmailValidatorForce"
+                                                controls:TextBoxRegex.ValidationType="Email"
+                                                Header="E-Mail"
+                                                HeaderTemplate="{StaticResource HeaderTemplate}"
+                                                Style="{StaticResource TextBoxRegexStyle}"
+                                                Text="{Binding NewContactInfo.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+                                        <Grid Height="74" Margin="10,0,60,0">
+                                            <StackPanel Margin="0,0,1664,39" Orientation="Horizontal">
+                                                <Image Source="ms-appx:///Resources/Images/skypeico.png" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="20"
+                                                    Text="Skype"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <TextBox
+                                                Width="300"
+                                                Margin="0,40,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Text="{Binding NewContactInfo.Skype, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                        </Grid>
+                                        <Grid Height="74" Margin="10,15,60,0">
+                                            <StackPanel
+                                                Margin="0,0,0,39"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal">
+                                                <Image Source="ms-appx:///Resources/Images/LinkidinIco.png" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="20"
+                                                    Text="LinkedIn"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <TextBox
+                                                Width="300"
+                                                Margin="0,40,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Text="{Binding NewContactInfo.LinkedIn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                        </Grid>
+                                    </StackPanel>
+                                    <Button
+                                        Width="150"
+                                        Height="160"
+                                        Margin="0,80,60,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding BrowseFileCommand}"
+                                        Content="Button"
+                                        Style="{StaticResource ChosePictureButtonStyle}" />
+                                </Grid>
                             </ScrollViewer>
                         </PivotItem>
                         <PivotItem Margin="0" Header="Отделы и должности">
@@ -483,10 +523,10 @@
                                 <controls:AdaptiveGridView
                                     x:Name="DepartmentsGridView"
                                     Margin="0,15,0,53"
-                                    DesiredWidth="210"
-                                    ItemHeight="400"
-                                    SelectionChanged="{x:Bind MainViewModel.DepartmentsGridView_SelectionChanged}"                                  
-                                    ItemsSource="{Binding Departments}">
+                                    DesiredWidth="200"
+                                    ItemHeight="500"
+                                    ItemsSource="{Binding Departments}"
+                                    SelectionChanged="{x:Bind MainViewModel.DepartmentsGridView_SelectionChanged}">
                                     <controls:AdaptiveGridView.Resources>
                                         <DataTemplate x:Key="DataTemplateDepartments">
                                             <Grid Width="250" Height="500">
@@ -530,11 +570,12 @@
                                 <ContentDialog
                                     x:Name="AddDepartmentContentDialog"
                                     Title="Введите название отдела"
+                                    Margin="771.5,0"
                                     VerticalAlignment="Stretch"
                                     Canvas.ZIndex="1"
                                     PrimaryButtonCommand="{Binding AddDepartmentCommand}"
                                     PrimaryButtonText="OK"
-                                    SecondaryButtonText="Cancel" Margin="771.5,0">
+                                    SecondaryButtonText="Cancel">
                                     <StackPanel Margin="0,0,0,-4">
                                         <TextBox
                                             Margin="0,9,0,0"
@@ -550,13 +591,6 @@
                 </Grid>
             </Frame>
         </SplitView>
-        <TextBlock
-            Grid.Row="1"
-            Margin="1952,294,-41,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Text="TextBlock"
-            TextWrapping="Wrap" />
     </Grid>
 
 </Page>

@@ -6,10 +6,10 @@
     <DataTemplate x:Key="EmployeesTemplate">
         <Grid
             Height="280"
-            MinHeight="210"
+            MinHeight="250"
             Background="White"
-            BorderBrush="#FF2079D3"
-            BorderThickness="3">
+            BorderBrush="#FF2079D3"           
+            BorderThickness="3" MinWidth="250">
             <StackPanel Margin="5,10,5,5" Orientation="Vertical">
                 <Ellipse
                     Width="100"
@@ -19,7 +19,7 @@
                     Stroke="#FF449EDC"
                     StrokeThickness="3">
                     <Ellipse.Fill>
-                        <ImageBrush ImageSource="ms-appx:///Resources/Images/hr.jpeg" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="{Binding PhotoPath}" Stretch="UniformToFill" />
                     </Ellipse.Fill>
                 </Ellipse>
                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
@@ -27,21 +27,21 @@
                     <TextBlock
                         Margin="10,0,0,0"
                         Foreground="#FF858585"
-                        Text="{Binding FirstName}" />
+                        Text="{Binding FirstName}" Width="140" />
                 </StackPanel>
                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <TextBlock Text="Фамилия:" />
                     <TextBlock
                         Margin="10,0,0,0"
                         Foreground="#FF858585"
-                        Text="{Binding LastName}" />
+                        Text="{Binding LastName}" Width="102" />
                 </StackPanel>
                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <TextBlock Text="Должность:" />
                     <TextBlock
                         Margin="10,0,0,0"
                         Foreground="#FF858585"
-                        Text="{Binding Post.Name}" />
+                        Text="{Binding PostName}" TextWrapping="Wrap" Width="94" />
                 </StackPanel>
 
             </StackPanel>
@@ -724,6 +724,63 @@
             </Border>
         </Grid>
     </DataTemplate>
+    <Style x:Key="ChosePictureButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource ButtonBackground}"/>
+        <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+        <Setter Property="Padding" Value="8,4,8,4"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+        <Setter Property="FocusVisualMargin" Value="-3"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid" Background="#00000000">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border BorderBrush="#FF7A7A7A" BorderThickness="2" CornerRadius="5"/>
+                        <Ellipse
+                            Width="150"
+                            Height="150"
+                            Margin="0"
+                            VerticalAlignment="Center"
+                            Stroke="#FF424242"
+                            StrokeThickness="3" HorizontalAlignment="Center" Canvas.ZIndex="1">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding CurrentImage}" Stretch="UniformToFill" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Viewbox HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100">
+                            <Path Data="M384,256C384,326.688 326.687,384 256,384 185.313,384 128,326.687 128,256 128,185.313 185.313,128 256,128 326.687,128 384,185.313 384,256z M512,64L512,448C512,483.344,483.344,512,448,512L64,512C28.656,512,0,483.344,0,448L0,64C0,28.656,28.656,0,64,0L448,0C483.344,0,512,28.656,512,64z M64,96C64,113.688 78.328,128 96,128 113.672,128 128,113.687 128,96 128,78.313 113.672,64 96,64 78.328,64 64,78.313 64,96z M480,172L391.562,172C363.312,126.562 313.312,96 255.999,96 198.671,96 148.686,126.563 120.436,172L32,172 32,364 138.719,364C167.985,395.75 209.532,416 256,416 302.468,416 344.031,395.75 373.281,364L480,364 480,172z" Fill="#FF424242" UseLayoutRounding="False" />
+                        </Viewbox>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 
 

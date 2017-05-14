@@ -11,8 +11,10 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Uwp;
 using Windows.UI.Xaml.Navigation;
+using RecruIT.Model.DBModel;
 using RecruIT.ViewModel;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
@@ -53,17 +55,19 @@ namespace RecruIT.View
                // myFrame.Navigate(typeof(settings));
                 TitleTextBlock.Text = "Настройки";
             }
+            
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
-        {            
+        {
+
             mySplitView.IsPaneOpen = !mySplitView.IsPaneOpen;
         }
 
 
         public async void ShowAddPostsDialogWindow()
-        {
-           await AddPostContentDialog.ShowAsync();
+        {            
+            await AddPostContentDialog.ShowAsync();
         }
 
         public async void ShowAddDepartmentDialogWindow()

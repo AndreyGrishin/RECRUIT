@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -20,15 +21,21 @@ namespace RecruIT.ViewModel
 
         #region Properties
 
-        public string ConfirmPassword { get; set; }
+        private string _confirmPassword;
+        public string ConfirmPassword
+        {
+            get => _confirmPassword;
+            set
+            {
+                _confirmPassword = value;
+                RaisePropertyChanged(() => ConfirmPassword);
+            }
+        }
 
         private bool _registerVisibility;
         public bool RegisterVisibility
         {
-            get
-            {
-                return _registerVisibility;
-            }
+            get => _registerVisibility;
             set
             {
                 _registerVisibility = value;
@@ -39,13 +46,7 @@ namespace RecruIT.ViewModel
         private Users _newUser;
         public Users NewUser
         {
-            get
-            {
-                if (_newUser == null)
-                    _newUser = new Users();
-                
-                return _newUser;
-            }
+            get => _newUser ?? (_newUser = new Users());
             set
             {
                 _newUser = value;
@@ -56,15 +57,10 @@ namespace RecruIT.ViewModel
         private Users _currentUser;
         public Users CurrentUser
         {
-            get
-            {
-                if (_currentUser == null)
-                    _currentUser = new Users();
-                return _currentUser;
-            }
+            get => _currentUser ?? (_currentUser = new Users());
             set
             {
-               
+
                 _currentUser = value;
                 RaisePropertyChanged(() => CurrentUser);
             }
@@ -73,10 +69,7 @@ namespace RecruIT.ViewModel
         public string Title
         {
 
-            get
-            {
-                return _title;
-            }
+            get => _title;
             set
             {
                 if (value == _title) return;
@@ -119,18 +112,18 @@ namespace RecruIT.ViewModel
         {
             get
             {
-                
+
                 if (_addUserCommand == null)
                     _addUserCommand = new RelayCommand(ExecuteAddUserCommand,
                         () =>
                         {
-                            
-                            if (string.IsNullOrEmpty(NewUser.Name) || string.IsNullOrEmpty(NewUser.Login) 
+
+                            if (string.IsNullOrEmpty(NewUser.Name) || string.IsNullOrEmpty(NewUser.Login)
                             || string.IsNullOrEmpty(NewUser.Password))
                                 return false;
                             return true;
                         });
-                
+
                 return _addUserCommand;
             }
         }
@@ -149,48 +142,54 @@ namespace RecruIT.ViewModel
 
         public async void ExecuteAddUserCommand()
         {
-            if (string.IsNullOrEmpty(_newUser.Name) && string.IsNullOrEmpty(_newUser.Login)
-                && string.IsNullOrEmpty(_newUser.Password) && string.IsNullOrEmpty(ConfirmPassword))
+            if (string.IsNullOrEmpty(NewUser.Name) && string.IsNullOrEmpty(NewUser.Login)
+                && string.IsNullOrEmpty(NewUser.Password) && string.IsNullOrEmpty(ConfirmPassword))
             {
                 await new MessageDialog("Заполните все необходимые поля").ShowAsync();
                 return;
             }
-            if (_newUser.Password != ConfirmPassword)
+            if (NewUser.Password != ConfirmPassword)
             {
                 await new MessageDialog("Введёные пароли не совпадают").ShowAsync();
                 return;
             }
             using (var db = new HrContext())
             {
-                db.Users.Add(_newUser);
+                NewUser.Id = GetLastIdPost(db) + 1;
+                db.Users.Add(NewUser);
                 db.SaveChanges();
             }
-            await new MessageDialog($"Новый пользователь {_newUser.Name} успешно добавлен").ShowAsync();
+            await new MessageDialog($"Новый пользователь {NewUser.Name} успешно добавлен").ShowAsync();
             ClearRegisterForm();
             ExecuteShowRegistrationCommand();
+
+            int GetLastIdPost(HrContext db)
+            {
+                return db.Users.Max(x => x.Id);
+            }
         }
+
+
 
         private void ClearRegisterForm()
         {
-            _newUser.Login = null;
-            _newUser.Name = null;
-            _newUser.Password = null;
+            NewUser = null;
             ConfirmPassword = null;
         }
 
         public async void ExecuteLoginCommand()
         {
-            if (string.IsNullOrEmpty(_currentUser.Login) && string.IsNullOrEmpty(_currentUser.Password))
+            if (string.IsNullOrEmpty(CurrentUser.Login) && string.IsNullOrEmpty(CurrentUser.Password))
             {
                 await new MessageDialog("Введите логин и пароль для входа").ShowAsync();
                 return;
             }
-            if (string.IsNullOrEmpty(_currentUser.Login))
+            if (string.IsNullOrEmpty(CurrentUser.Login))
             {
                 await new MessageDialog("Введите логин").ShowAsync();
                 return;
             }
-            if (string.IsNullOrEmpty(_currentUser.Password))
+            if (string.IsNullOrEmpty(CurrentUser.Password))
             {
                 await new MessageDialog("Введите пароль").ShowAsync();
                 return;
@@ -200,23 +199,24 @@ namespace RecruIT.ViewModel
 
             using (var db = new HrContext())
             {
+                if (!db.Users.Any(x => x.Login == CurrentUser.Login))
+                {
+                    await new MessageDialog("Данного пользователя не существует").ShowAsync();
+                    return;
+                }
+                   
                 await db.Users.ForEachAsync(async p =>
                 {
-                    if (p.Login == CurrentUser.Login)
+                    if (p.Login != CurrentUser.Login) return;
+
+                    if (p.Password == CurrentUser.Password)
                     {
-                        if (p.Password == CurrentUser.Password)
-                        {
-                            _navigationService.NavigateTo("MainPage");
-                            ClearLoginForm();
-                        }
-                        else
-                        {
-                            await new MessageDialog("Вы ввели неверный пароль. Попробуйте снова.").ShowAsync();
-                        }
+                        _navigationService.NavigateTo("MainPage");
+                        ClearLoginForm();
                     }
                     else
                     {
-                        await new MessageDialog("Пользователя с таким логином не существует").ShowAsync();
+                        await new MessageDialog("Вы ввели неверный пароль. Попробуйте снова.").ShowAsync();
                     }
                 });
             }
@@ -225,8 +225,7 @@ namespace RecruIT.ViewModel
 
         private void ClearLoginForm()
         {
-            _currentUser.Login = null;
-            _currentUser.Password = null;
+            CurrentUser = null;
         }
         #endregion
 
@@ -257,7 +256,7 @@ namespace RecruIT.ViewModel
             NavigateCommand = new RelayCommand(NavigateCommandAction);
         }
 
-        
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string name)

@@ -76,6 +76,8 @@ namespace RecruIT.Migrations
 
                     b.Property<DateTime>("StartDate");
 
+                    b.Property<string>("PhotoPath");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContactInfoId");
